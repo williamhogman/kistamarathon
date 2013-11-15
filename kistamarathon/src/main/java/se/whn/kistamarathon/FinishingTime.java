@@ -52,6 +52,9 @@ public class FinishingTime implements Comparable<FinishingTime> {
 
     @Override
     public String toString() {
+        if(this == NOT_FINISHED) {
+            return "--";
+        }
         return String.format("%d.%d", this.time / 60,this.time % 60);
     }
 }

@@ -1,6 +1,8 @@
 package se.whn.kistamarathon;
 
 import java.util.Comparator;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 public class Runner {
     private String name, country;
@@ -8,30 +10,16 @@ public class Runner {
     private FinishingTime finishedAt;
 
     public Runner(String name, String country, int age, int startingNumber) {
-        if(name == "") {
-            throw new IllegalArgumentException("Name cannot be the empty string");
-        }
+        checkArgument(name != null, "Name can't be null");
+        checkArgument(!name.equals(""), "Name can't be the empty string");
 
-        if(name == null) {
-            throw new IllegalArgumentException("Name can't be null");
-        }
+        checkArgument(country != null, "Country can't be null");
+        checkArgument(!country.equals(""), "Country can't be the empty string");
 
-        if(country == "") {
-            throw new IllegalArgumentException("Country cannot be the empty string");
-        }
+        checkArgument(age >= 0, "Age cannot be negative");
+        checkArgument(startingNumber > 0, 
+                      "Starting number has to be a postive, non-zero integer");
 
-        if(country == null) {
-            throw new IllegalArgumentException("Country can't be null");            
-        }
-
-        if(age < 0) {
-            throw new IllegalArgumentException("Age can't be negative");
-        }
-
-        if(startingNumber < 1) {
-            throw new IllegalArgumentException("Starting number has to be a postive and non-zero");
-        }
-        
         this.name = name;
         this.country = country;
         this.startingNumber = startingNumber;
@@ -48,15 +36,22 @@ public class Runner {
     }
 
     public Runner finished(FinishingTime finishedAt) {
-        if(finishedAt == FinishingTime.NOT_FINISHED) {
-            throw new IllegalArgumentException("Finshed at has to be an actual time");
-        }
+        checkState(this.finishedAt == FinishingTime.NOT_FINISHED,
+                   "The runner has already finished");
+        checkArgument(finishedAt != null,
+                      "Finished at can't be null");
+        checkArgument(finishedAt != FinishingTime.NOT_FINISHED,
+                      "Finshed at has to be an actual time");
         return new Runner(this, finishedAt);
     }
 
+
     @Override
     public String toString() {
-        return String.format("%d %s %s %d", this.startingNumber, this.name, this.country, this.age);
+        return String.format("%d %s %s %d %s", 
+                             this.startingNumber, this.name, 
+                             this.country, this.age,
+                             this.finishedAt);
     }
 
     public static Comparator<Runner> comparatorFor(SortOrder order) {
