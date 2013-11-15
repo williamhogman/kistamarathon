@@ -5,6 +5,7 @@ import java.util.Comparator;
 public class Runner {
     private String name, country;
     private int age, startingNumber;
+    private FinishingTime finishedAt;
 
     public Runner(String name, String country, int age, int startingNumber) {
         if(name == "") {
@@ -35,6 +36,22 @@ public class Runner {
         this.country = country;
         this.startingNumber = startingNumber;
         this.age = age;
+        this.finishedAt = FinishingTime.NOT_FINISHED;
+    }
+
+    private Runner(Runner base, FinishingTime finishedAt) {
+        this.name = base.name;
+        this.country = base.country;
+        this.startingNumber = base.startingNumber;
+        this.age = base.age;
+        this.finishedAt = finishedAt;
+    }
+
+    public Runner finished(FinishingTime finishedAt) {
+        if(finishedAt == FinishingTime.NOT_FINISHED) {
+            throw new IllegalArgumentException("Finshed at has to be an actual time");
+        }
+        return new Runner(this, finishedAt);
     }
 
     @Override
@@ -50,9 +67,8 @@ public class Runner {
             return Runner.NameComparator.INSTANCE;
         case Age:
             return Runner.AgeComparator.INSTANCE;
-        case Time:
-            return null;
-            //return Runner.TimeComparator.INSTANCE;
+        case FinishingTime:
+            return Runner.FinishingTimeComparator.INSTANCE;
         }
         throw new AssertionError("Fell through switch statement covering all possible cases");
     }
@@ -75,6 +91,13 @@ public class Runner {
         private static final StartingNumberComparator INSTANCE = new StartingNumberComparator();
         public int compare(Runner a, Runner b) {
             return Integer.compare(a.startingNumber, b.startingNumber);
+        }
+    }
+
+    private static class FinishingTimeComparator implements Comparator<Runner> {
+        private static final FinishingTimeComparator INSTANCE = new FinishingTimeComparator();
+        public int compare(Runner a, Runner b) {
+            return a.finishedAt.compareTo(b.finishedAt);
         }
     }
     

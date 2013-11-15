@@ -4,5 +4,5 @@ public enum SortOrder {
     StartingNumber,
     Name,
     Age,
-    Time
+    FinishingTime
 }

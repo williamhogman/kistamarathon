@@ -25,6 +25,10 @@ public class RunnerComparatorTest {
     final Runner first = new Runner("First", "Sweden", 30, 1);
     final Runner last = new Runner("Last", "Sweden", 30, 99);
 
+    final Runner fast = (new Runner("Fast", "Sweden", 30, 1)).finished(new FinishingTime(0, 1));
+    final Runner slow = (new Runner("Fast", "Sweden", 30, 1)).finished(new FinishingTime(1, 0));
+    final Runner dnf = new Runner("Fast", "Sweden", 30, 1);
+
     @Test
     public void nameCompareAB() {
         int res = Runner.comparatorFor(SortOrder.Name).compare(alice, bob);
@@ -76,6 +80,24 @@ public class RunnerComparatorTest {
     @Test
     public void StartingNoCompareFF() {
         int res = Runner.comparatorFor(SortOrder.StartingNumber).compare(first, first);
+        assertThat(res, is(equalTo(0)));
+    }
+
+    @Test
+    public void FinishingTimeComparatorFS() {
+        int res = Runner.comparatorFor(SortOrder.FinishingTime).compare(fast, slow);
+        assertThat(res, is(lessThan(0)));
+    }
+
+    @Test
+    public void FinishingTimeComparatorSF() {
+        int res = Runner.comparatorFor(SortOrder.FinishingTime).compare(slow, fast);
+        assertThat(res, is(greaterThan(1)));
+    }
+
+    @Test
+    public void FinishingTimeFF() {
+        int res = Runner.comparatorFor(SortOrder.FinishingTime).compare(fast, fast);
         assertThat(res, is(equalTo(0)));
     }
 
