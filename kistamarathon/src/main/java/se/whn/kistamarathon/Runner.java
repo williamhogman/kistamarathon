@@ -27,6 +27,11 @@ public class Runner {
         this.finishedAt = FinishingTime.NOT_FINISHED;
     }
 
+
+    int getStartingNumber() {
+        return startingNumber;
+    }
+
     private Runner(Runner base, FinishingTime finishedAt) {
         this.name = base.name;
         this.country = base.country;
@@ -44,7 +49,6 @@ public class Runner {
                       "Finshed at has to be an actual time");
         return new Runner(this, finishedAt);
     }
-
 
     @Override
     public String toString() {
